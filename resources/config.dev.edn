@@ -1,0 +1,6 @@
+{:database {:classname "org.apache.derby.jdbc.EmbeddedDriver"
+            :subprotocol "derby"
+            :subname "ad_server_dev;create=true"
+            :init-pool-size 4
+            :max-pool-size 20
+            :partitions 2}}
