@@ -20,7 +20,8 @@
                  [clj-http-status "0.1.0"]
                  [buddy/buddy-auth "0.7.1"]
                  [environ "1.0.1"]
-                 [medley "0.7.0"]]
+                 [medley "0.7.0"]
+                 [stencil "0.5.0"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-environ "1.0.1"]]
   :ring {:handler adserver.handler/app}
