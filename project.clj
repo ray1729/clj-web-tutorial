@@ -21,7 +21,8 @@
                  [buddy/buddy-auth "0.7.1"]
                  [environ "1.0.1"]
                  [medley "0.7.0"]]
-  :plugins [[lein-ring "0.9.7"]]
+  :plugins [[lein-ring "0.9.7"]
+            [lein-environ "1.0.1"]]
   :ring {:handler adserver.handler/app}
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
