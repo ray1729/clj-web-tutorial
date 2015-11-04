@@ -90,7 +90,7 @@
   [db]
   (jdbc/with-db-transaction [t-con db]
     (let [[{:keys [n]}] (jdbc/query t-con ["SELECT COUNT(*) AS n FROM ads WHERE is_active"])]
-      (first (jdbc/query t-con ["SELECT ad_id, title, content, width, height, url, is_active, created_at, updated_at
+      (first (jdbc/query t-con ["SELECT ad_id, title, content, width, height, url
                                  FROM ads
                                  WHERE is_active
                                  OFFSET ? ROWS
