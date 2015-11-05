@@ -94,13 +94,16 @@
                :content-bytes (get-bytes (get-in params [:image :tempfile]))
                :size          (get-in params [:image :size])}
         id (db/create-ad! db-conn ad image)]
-    (redirect (str "/admin/show/" id))))
+    (-> (redirect "/admin/list")
+        (assoc :flash {:info (str "Created ad " id)}))))
 
 (defn render-list
-  [ads]
+  [ads flash]
   (common/layout
    [:div
     [:h1 "Ads"]
+    (when-let [info-mesg (:info flash)]
+      [:div.info [:p info-mesg]])
     [:table
      [:thead
       [:tr (map (partial vector :th) ["Id" "Title" "Created" "Updated" "Active?" "Clicks"])]]
@@ -110,8 +113,8 @@
            ads)]]]))
 
 (defn handle-list
-  [{:keys [db-conn] :as request}]
-  (-> (response (render-list (db/list-ads db-conn)))
+  [{:keys [db-conn flash] :as request}]
+  (-> (response (render-list (db/list-ads db-conn) flash))
       (content-type "text/html")))
 
 (defn render-show
@@ -141,10 +144,21 @@
      [:div.one.column.heading "Created"]
      [:div.three.columns created-at]
      [:div.one.column.heading "Updated"]
-     [:div.three.columns updated-at]]]))
+     [:div.three.columns updated-at]]
+     [:div.row
+      (f/form-to
+       [:post (str "/admin/delete/" ad-id)]
+       (anti-forgery-field)
+       (f/submit-button "Delete this Ad"))]]))
 
 (defn handle-show
   [{:keys [db-conn params] :as request}]
   (when-let [ad (db/retrieve-ad db-conn (:id params))]
     (-> (response (render-show ad))
         (content-type "text/html"))))
+
+(defn handle-delete
+  [{:keys [db-conn params session] :as request}]
+  ;;(db/delete-ad! db-conn (:id params))
+  (-> (redirect "/admin/list")
+      (assoc :flash {:info (str "Deleted ad " (:id params))})))

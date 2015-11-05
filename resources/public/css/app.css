@@ -1,3 +1,7 @@
 div.heading {
     font-weight: bold;
 }
+
+div.info {
+    background-color: PowderBlue;
+}
