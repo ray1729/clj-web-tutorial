@@ -6,7 +6,7 @@
             [stencil.core :as stencil]
             [hiccup.form :as f]
             [adserver.db :as db]
-            [adserver.view.common :as common]))
+            [adserver.handler.common :as common]))
 
 (defn handle-random-ad
   [request]

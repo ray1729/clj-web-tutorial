@@ -1,4 +1,4 @@
-(ns adserver.view.common
+(ns adserver.handler.common
   (:require [hiccup.def :refer [defhtml]]
             [hiccup.page :refer [html5 include-css]]))
 

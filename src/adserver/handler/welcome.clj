@@ -1,6 +1,6 @@
 (ns adserver.handler.welcome
   (:require [ring.util.response :refer [response content-type]]
-            [adserver.view.common :as common]))
+            [adserver.handler.common :as common]))
 
 (defn render-welcome
   []
