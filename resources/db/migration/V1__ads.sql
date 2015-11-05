@@ -13,8 +13,8 @@ CREATE TABLE ads (
 
 CREATE TABLE images (
        ad_id         INTEGER NOT NULL,
-       size          INTEGER NOT NULL,
        content_type  VARCHAR(128) NOT NULL,
+       size          INTEGER NOT NULL,
        content_bytes BLOB NOT NULL,
        created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
        updated_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

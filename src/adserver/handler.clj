@@ -21,9 +21,9 @@
   (ANY  "/logout" [] handle-dump))
 
 (defroutes admin-routes
-  (GET  "/create"     [] handle-dump)
-  (POST "/create"     [] handle-dump)
-  (GET  "/list"       [] handle-dump)
+  (GET  "/create"     [] ad/handle-show-create)
+  (POST "/create"     [] ad/handle-create)
+  (GET  "/list"       [] ad/handle-list)
   (GET  "/show/:id"   [] handle-dump)
   (POST "/delete/:id" [] handle-dump))
 
@@ -34,8 +34,8 @@
   (route/resources "/")
   (route/not-found "Not Found"))
 
-(def config nil)
-(def data-source nil)
+(defonce config nil)
+(defonce data-source nil)
 
 (defn wrap-config
   [handler]

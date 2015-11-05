@@ -80,7 +80,7 @@
 (defn retrieve-image
   [db id]
   (jdbc/with-db-transaction [t-con db]
-    (first (jdbc/query t-con ["SELECT ad_id, size, content_type, content_bytes, created_at, updated_at
+    (first (jdbc/query t-con ["SELECT ad_id, content_type, content_bytes, created_at, updated_at
                                FROM images
                                WHERE ad_id = ?"
                               id]
@@ -106,7 +106,8 @@
                         FROM ads
                         LEFT OUTER JOIN clicks USING(ad_id)
                         GROUP BY ads.ad_id, ads.title, ads.created_at, ads.updated_at, ads.is_active
-                        ORDER BY ads.ad_id"])))
+                        ORDER BY ads.ad_id"]
+                :identifiers from-identifier)))
 
 (defn create-click!
   [db click]

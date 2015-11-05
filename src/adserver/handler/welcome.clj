@@ -5,8 +5,7 @@
 (defn render-welcome
   []
   (common/layout
-   {:title "Welcome to NonDysfunctional AdServer"
-    :content [:h1 "Welcome to NonDysfunctionalAdserver"]}))
+   [:h1 "Welcome to NonDysfunctionalAdserver"]))
 
 (defn handle-welcome
   [request]
