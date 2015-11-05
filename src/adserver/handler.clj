@@ -24,7 +24,7 @@
   (GET  "/create"     [] ad/handle-show-create)
   (POST "/create"     [] ad/handle-create)
   (GET  "/list"       [] ad/handle-list)
-  (GET  "/show/:id"   [] handle-dump)
+  (GET  "/show/:id"   [] ad/handle-show)
   (POST "/delete/:id" [] handle-dump))
 
 (defroutes app-routes

@@ -5,8 +5,11 @@
             [clojure.string :as str]
             [stencil.core :as stencil]
             [hiccup.form :as f]
+            [hiccup.element :as e]
+            [hiccup.core :refer [h]]
             [adserver.db :as db]
-            [adserver.handler.common :as common]))
+            [adserver.handler.common :as common])
+  (:import [java.io ByteArrayInputStream]))
 
 (defn handle-random-ad
   [request]
@@ -26,7 +29,7 @@
 (defn handle-image
   [{:keys [db-conn params] :as request}]
   (when-let [image (db/retrieve-image db-conn (:id params))]
-    (-> (response (:content-bytes image))
+    (-> (response (ByteArrayInputStream. (:content-bytes image)))
         (content-type (:content-type image)))))
 
 (defn handle-click
@@ -103,10 +106,45 @@
       [:tr (map (partial vector :th) ["Id" "Title" "Created" "Updated" "Active?" "Clicks"])]]
      [:tbody
       (map (fn [{:keys [ad-id title created-at updated-at is-active clicks]}]
-             [:tr (map (partial vector :td) [ad-id title created-at updated-at is-active clicks])])
+             [:tr (map (comp (partial vector :td) h) [ad-id title created-at updated-at is-active clicks])])
            ads)]]]))
 
 (defn handle-list
   [{:keys [db-conn] :as request}]
   (-> (response (render-list (db/list-ads db-conn)))
       (content-type "text/html")))
+
+(defn render-show
+  [{:keys [ad-id title content width height url is-active created-at updated-at clicks]}]
+  (common/layout
+   [:div
+    [:h1 (h title)]
+    [:div.row
+     [:div.two.columns
+      (e/image (str "/ad/image/" ad-id) title)]
+     [:div.ten.columns
+      [:p (h content)]]]
+    [:div.row
+     [:div.one.column.heading "Active?"]
+     [:div.one.column is-active]
+     [:div.one.column.heading "Clicks"]
+     [:div.one.column clicks]]
+    [:div.row
+     [:div.one.column.heading "Height"]
+     [:div.one.column height]
+     [:div.one.column.heading "Width"]
+     [:div.one.column width]]
+    [:div.row
+     [:div.one.column.heading "URL"]
+     [:div.ten.columns (h url)]]
+    [:div.row
+     [:div.one.column.heading "Created"]
+     [:div.three.columns created-at]
+     [:div.one.column.heading "Updated"]
+     [:div.three.columns updated-at]]]))
+
+(defn handle-show
+  [{:keys [db-conn params] :as request}]
+  (when-let [ad (db/retrieve-ad db-conn (:id params))]
+    (-> (response (render-show ad))
+        (content-type "text/html"))))

@@ -10,7 +10,8 @@
     [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
     (include-css "//fonts.googleapis.com/css?family=Raleway:400,300,600"
                  "/css/normalize.css"
-                 "/css/skeleton.css")
+                 "/css/skeleton.css"
+                 "/css/app.css")
     [:title title]]
    [:body
     [:div.container

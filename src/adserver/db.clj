@@ -77,14 +77,21 @@
                               id]
                        :identifiers from-identifier))))
 
+(defn blob-to-bytes
+  [blob]
+  (println blob)
+  (.getBytes blob 1 (.length blob)))
+
 (defn retrieve-image
   [db id]
   (jdbc/with-db-transaction [t-con db]
-    (first (jdbc/query t-con ["SELECT ad_id, content_type, content_bytes, created_at, updated_at
-                               FROM images
-                               WHERE ad_id = ?"
-                              id]
-                       :identifiers from-identifier))))
+    (when-let [image (first (jdbc/query t-con
+                                        ["SELECT ad_id, content_type, content_bytes, created_at, updated_at
+                                          FROM images
+                                          WHERE ad_id = ?"
+                                         id]
+                                        :identifiers from-identifier))]
+      (update image :content-bytes blob-to-bytes))))
 
 (defn retrieve-random-ad
   [db]
