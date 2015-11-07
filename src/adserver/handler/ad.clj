@@ -73,7 +73,7 @@
        (f/label "image" "Image")
        (f/file-upload {:class "u-full-width" :required true} "image")]]
      [:div.row
-      [:div.six.columns
+      [:div.u-pull-right
        (f/submit-button {:class "button-primary"} "Create")]])]))
 
 (defn handle-show-create
