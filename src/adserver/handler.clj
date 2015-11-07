@@ -59,7 +59,12 @@
 (defn destroy
   []
   (when-let [ds (:datasource data-source)]
-    (.close ds))
+    (.close ds)
+    (try
+      ;; Embedded Derby shutdown
+      (jdbc/get-connection {:connection-uri "jdbc:derby:;shutdown=true"})
+      (catch Exception e
+        (log/info (.getMessage e)))))
   (alter-var-root (var data-source) (constantly nil))
   (alter-var-root (var config) (constantly nil)))
 
