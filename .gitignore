@@ -2,6 +2,8 @@
 /lib
 /classes
 /checkouts
+/derby.log
+/ad_server_dev
 pom.xml
 pom.xml.asc
 *.jar
