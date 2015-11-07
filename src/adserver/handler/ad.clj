@@ -137,7 +137,7 @@
      [:div.one.column width]]
     [:div.row
      [:div.one.column.heading "URL"]
-     [:div.ten.columns (h url)]]
+     [:div.ten.columns (e/link-to url (h url))]]
     [:div.row
      [:div.one.column.heading "Created"]
      [:div.three.columns created-at]
