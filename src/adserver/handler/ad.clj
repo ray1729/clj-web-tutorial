@@ -44,7 +44,7 @@
   (common/layout
    [:div
     [:h1 "Create New Ad"]
-    [:p (e/link-to "/admin/list" "Back to list")]
+    (common/nav-bar :list :logout)
     (f/form-to
      {:enctype "multipart/form-data"}
      [:post "/admin/create"]
@@ -96,7 +96,7 @@
   (common/layout
    [:div
     [:h1 "Ads"]
-    [:p (e/link-to "/admin/create" "Create new ad")]
+    (common/nav-bar :create :logout)
     (when-let [info-mesg (:info flash)]
       [:div.info [:p info-mesg]])
     [:table
@@ -119,7 +119,7 @@
   (common/layout
    [:div
     [:h1 (h title)]
-    [:p (e/link-to "/admin/list" "Back to list")]
+    (common/nav-bar :list :logout)
     [:div.row
      [:div.two.columns
       (e/image {:height height :width width} (str "/ad/image/" ad-id) title)]

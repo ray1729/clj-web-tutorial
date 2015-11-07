@@ -1,5 +1,6 @@
 (ns adserver.handler.common
-  (:require [hiccup.def :refer [defhtml]]
+  (:require [hiccup.def :refer [defhtml defelem]]
+            [hiccup.element :as e]
             [hiccup.page :refer [html5 include-css]]))
 
 (defn layout
@@ -15,5 +16,18 @@
     [:title title]]
    [:body
     [:div.container
-     [:div.row
-      content]]]))
+     content]]))
+
+(def navigation
+  {:logout ["/logout" "Logout"]
+   :list   ["/admin/list" "Back to list"]
+   :create ["/admin/create" "Create new ad"]})
+
+(defelem nav-bar
+  [& ks]
+  [:div.row
+   [:div.navbar.u-pull-right
+    (map (fn [k]
+           (when-let [[url label] (navigation k)]
+             (e/link-to url label)))
+         ks)]])

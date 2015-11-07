@@ -3,7 +3,8 @@
             [clojure.java.jdbc :as jdbc]
             [clojure.java.io :as io]
             [clojure.edn :as edn]
-            [medley.core :as medley])
+            [medley.core :as medley]
+            [buddy.hashers :as hashers])
   (:import [com.jolbox.bonecp BoneCPDataSource]
            [org.flywaydb.core Flyway]
            [java.io PushbackReader]))
@@ -136,6 +137,34 @@
     (jdbc/execute! t-con ["DELETE FROM clicks WHERE ad_id = ?" id])
     (jdbc/execute! t-con ["DELETE FROM images WHERE ad_id = ?" id])
     (jdbc/execute! t-con ["DELETE FROM ads WHERE ad_id = ?" id])))
+
+(defn create-user!
+  [db {:keys [user-name password roles]}]
+  (jdbc/with-db-transaction [t-con db]
+    (let [user {:user-name user-name :password (hashers/encrypt password)}
+          [{user-id :1}] (jdbc/insert! t-con :users (medley/map-keys to-identifier user))]
+      (doseq [role-name roles]
+        (let [[rc] (jdbc/execute! t-con ["INSERT INTO user_roles(user_id, role_id)
+                                          SELECT ?, role_id
+                                          FROM roles
+                                          WHERE role_name = ?"
+                                         user-id role-name])]
+          (when (= rc 0)
+            (throw (Exception. (str "No such role " role-name))))))
+      user-id)))
+
+(defn retrieve-user
+  [db user-name]
+  (jdbc/with-db-transaction [t-con db]
+    (let [rows (jdbc/query t-con ["SELECT users.user_id, users.user_name, users.password, roles.role_name
+                                   FROM users
+                                   LEFT OUTER JOIN user_roles USING(user_id)
+                                   LEFT OUTER JOIN roles USING(role_id)
+                                   WHERE users.user_name = ?"
+                                  user-name]
+                           :identifiers from-identifier)]
+      (assoc (select-keys (first rows) [:user-id :user-name :password])
+        :roles (set (keep :role-name rows))))))
 
 (defn load-fixtures
   [db]

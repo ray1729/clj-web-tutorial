@@ -1,13 +1,19 @@
 (ns adserver.handler
   (:require [clojure.java.jdbc :as jdbc]
+            [clojure.tools.logging :as log]
             [compojure.core :refer :all]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.util.response :refer [redirect]]
             [ring.handler.dump :refer [handle-dump]]
+            [buddy.auth :refer [authenticated?]]
+            [buddy.auth.accessrules :as authz]
+            [buddy.auth.backends.session :refer [session-backend]]
+            [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
             [adserver.config :as config]
             [adserver.db :as db]
-            [adserver.handler.ad :as ad]))
+            [adserver.handler.ad :as ad]
+            [adserver.handler.auth :as auth]))
 
 (defroutes public-routes
   (GET "/"             [] (redirect "/admin/list"))
@@ -16,9 +22,9 @@
   (GET "/ad/click/:id" [] ad/handle-click))
 
 (defroutes auth-routes
-  (GET  "/login"  [] handle-dump)
-  (POST "/login"  [] handle-dump)
-  (ANY  "/logout" [] handle-dump))
+  (GET  "/login"  [] auth/handle-show-login)
+  (POST "/login"  [] auth/handle-login)
+  (ANY  "/logout" [] auth/handle-logout))
 
 (defroutes admin-routes
   (GET  "/create"     [] ad/handle-show-create)
@@ -26,13 +32,6 @@
   (GET  "/list"       [] ad/handle-list)
   (GET  "/show/:id"   [] ad/handle-show)
   (POST "/delete/:id" [] ad/handle-delete))
-
-(defroutes app-routes
-  public-routes
-  auth-routes
-  (context "/admin" [] admin-routes)
-  (route/resources "/")
-  (route/not-found "Not Found"))
 
 (defonce config nil)
 (defonce data-source nil)
@@ -68,7 +67,25 @@
   (alter-var-root (var data-source) (constantly nil))
   (alter-var-root (var config) (constantly nil)))
 
+;; Buddy authentication backend
+(def auth-backend (session-backend {:unauthorized-handler auth/handle-unauthorized}))
+
+(defn require-admin
+  [request]
+  (let [roles (get-in request [:identity :roles] #{})]
+    (contains? roles "admin")))
+
+(defroutes app-routes
+  public-routes
+  auth-routes
+  (context "/admin" [] (authz/restrict admin-routes {:handler require-admin}))
+  (route/resources "/")
+  (route/not-found "Not Found"))
+
 (def app
-  (-> (wrap-defaults app-routes site-defaults)
+  (-> app-routes
+      (wrap-authentication auth-backend)
+      (wrap-authorization auth-backend)
+      (wrap-defaults site-defaults)
       wrap-config
       wrap-db-connection))

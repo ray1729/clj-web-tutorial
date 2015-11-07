@@ -5,3 +5,11 @@ div.heading {
 div.info {
     background-color: PowderBlue;
 }
+
+div.error {
+    background-color: LightPink;
+}
+
+div.navbar a {
+    margin: 5px;
+}
