@@ -62,7 +62,7 @@
     (.close ds)
     (try
       ;; Embedded Derby shutdown
-      (jdbc/get-connection {:connection-uri "jdbc:derby:;shutdown=true"})
+      (jdbc/get-connection {:connection-uri "jdbc:derby:;shutdown=true;deregister=false"})
       (catch Exception e
         (log/info (.getMessage e)))))
   (alter-var-root (var data-source) (constantly nil))
