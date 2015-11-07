@@ -122,7 +122,7 @@
     [:p (e/link-to "/admin/list" "Back to list")]
     [:div.row
      [:div.two.columns
-      (e/image (str "/ad/image/" ad-id) title)]
+      (e/image {:height height :width width} (str "/ad/image/" ad-id) title)]
      [:div.ten.columns
       [:p (h content)]]]
     [:div.row
@@ -157,6 +157,6 @@
 
 (defn handle-delete
   [{:keys [db-conn params session] :as request}]
-  ;;(db/delete-ad! db-conn (:id params))
+  (db/delete-ad! db-conn (:id params))
   (-> (redirect "/admin/list")
       (assoc :flash {:info (str "Deleted ad " (:id params))})))
