@@ -12,7 +12,7 @@
                  [ch.qos.logback/logback-core "1.1.3"]
                  [org.slf4j/slf4j-api "1.7.12"]
                  [org.apache.derby/derby "10.12.1.1"]
-                 [com.layerware/hugsql "0.2.2"]
+                 ;;[com.layerware/hugsql "0.2.2"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
                  [org.flywaydb/flyway-core "3.2.1"]
                  [clj-time "0.11.0"]
@@ -34,6 +34,7 @@
                         [ring/ring-mock "0.3.0"]
                         [ring/ring-devel "1.4.0"]
                         [ring/ring-jetty-adapter "1.4.0"]]
-         :resource-paths ["dev-resources" "resources"]
+         :resource-paths ["dev/resources" "resources"]
+         :source-paths ["dev/src" "src"]
          :env {:config-path "config.dev.edn"}}
    :test {:env {:config-path "config.test.edn"}}})

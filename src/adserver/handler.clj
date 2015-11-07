@@ -3,14 +3,14 @@
             [compojure.core :refer :all]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.util.response :refer [redirect]]
             [ring.handler.dump :refer [handle-dump]]
             [adserver.config :as config]
             [adserver.db :as db]
-            [adserver.handler.welcome :as welcome]
             [adserver.handler.ad :as ad]))
 
 (defroutes public-routes
-  (GET "/"             [] welcome/handle-welcome)
+  (GET "/"             [] (redirect "/admin/list"))
   (GET "/ad"           [] ad/handle-random-ad)
   (GET "/ad/image/:id" [] ad/handle-image)
   (GET "/ad/click/:id" [] ad/handle-click))
