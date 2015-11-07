@@ -34,5 +34,6 @@
                         [ring/ring-mock "0.3.0"]
                         [ring/ring-devel "1.4.0"]
                         [ring/ring-jetty-adapter "1.4.0"]]
+         :resource-paths ["dev-resources" "resources"]
          :env {:config-path "config.dev.edn"}}
    :test {:env {:config-path "config.test.edn"}}})

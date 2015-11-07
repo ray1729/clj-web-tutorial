@@ -1,9 +1,12 @@
 (ns adserver.db
   (:require [clojure.string :as str]
             [clojure.java.jdbc :as jdbc]
+            [clojure.java.io :as io]
+            [clojure.edn :as edn]
             [medley.core :as medley])
   (:import [com.jolbox.bonecp BoneCPDataSource]
-           [org.flywaydb.core Flyway]))
+           [org.flywaydb.core Flyway]
+           [java.io PushbackReader]))
 
 (defn pooled-datasource
   [db-spec]
@@ -53,6 +56,17 @@
       (str/replace "-" "_")
       (keyword)))
 
+(defn file-to-bytes
+  [file]
+  (let [bytes (byte-array (.length file))]
+    (with-open [r (io/input-stream file)]
+      (.read r bytes))
+    bytes))
+
+(defn blob-to-bytes
+  [blob]
+  (.getBytes blob 1 (.length blob)))
+
 (defn create-ad!
   "Insert an ad and image, return the generated key."
   [db ad image]
@@ -76,11 +90,6 @@
                                         ads.url, ads.is_active, ads.created_at, ads.updated_at"
                               id]
                        :identifiers from-identifier))))
-
-(defn blob-to-bytes
-  [blob]
-  (println blob)
-  (.getBytes blob 1 (.length blob)))
 
 (defn retrieve-image
   [db id]
@@ -128,19 +137,17 @@
     (jdbc/execute! t-con ["DELETE FROM images WHERE ad_id = ?" id])
     (jdbc/execute! t-con ["DELETE FROM ads WHERE ad_id = ?" id])))
 
-
-(comment
-  (require '[inflections.core :refer [ordinalize]])
-
-  (defn create-fixtures
-    [ds num-fixtures]
-    (jdbc/with-db-transaction [t-con ds]
-      (dotimes [n num-fixtures]
-        (create-ad! t-con
-                    {:title (str "Ad " n)
-                     :content (str "The " (ordinalize (inc n)) " ad.")
-                     :is-active (rand-nth [true false])
-                     :width 10
-                     :height 20
-                     :url (str "http://example.com/ad/" n)}
-                    nil)))))
+(defn load-fixtures
+  [db]
+  (let [fixtures (with-open [r (PushbackReader.
+                                (io/reader (io/resource "fixtures/fixtures.edn")))]
+                   (edn/read r))]
+    (jdbc/with-db-transaction [t-con db]
+      (doseq [f fixtures]
+        (println (str "Loading " (:title f)))
+        (let [ad (select-keys f [:title :content :url :height :width])
+              image-bytes (file-to-bytes (io/file (io/resource (:image f))))
+              image {:content-type "image/gif"
+                     :content-bytes image-bytes
+                     :size (count image-bytes)}]
+          (create-ad! t-con ad image))))))

@@ -80,18 +80,11 @@
   (-> (response (render-create-ad))
       (content-type "text/html")))
 
-(defn get-bytes
-  [file]
-  (let [bytes (byte-array (.length file))]
-    (with-open [r (io/input-stream file)]
-      (.read r bytes))
-    bytes))
-
 (defn handle-create
   [{:keys [db-conn params] :as request}]
   (let [ad (select-keys params [:title :content :height :width :url])
         image {:content-type  (get-in params [:image :content-type] "application/octet-stream")
-               :content-bytes (get-bytes (get-in params [:image :tempfile]))
+               :content-bytes (db/file-to-bytes (get-in params [:image :tempfile]))
                :size          (get-in params [:image :size])}
         id (db/create-ad! db-conn ad image)]
     (-> (redirect "/admin/list")

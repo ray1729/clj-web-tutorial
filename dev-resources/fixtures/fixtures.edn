@@ -1,0 +1,36 @@
+[{:title "Living Clojure"
+  :content "An Introduction and Training Plan for Developers"
+  :url "http://shop.oreilly.com/product/0636920034292.do"
+  :image "fixtures/living-clojure.gif"
+  :height 112
+  :width 85}
+ {:title "Clojure for the Brave and True"
+  :content "Learn the Ultimate Language and Become a Better Programmer"
+  :url "http://shop.oreilly.com/product/9781593275914.do"
+  :image "fixtures/brave-and-true.gif"
+  :height 112
+  :width 85}
+ {:title "Clojure Applied"
+  :content "From Practice to Practitioner"
+  :url "http://shop.oreilly.com/product/9781680500745.do"
+  :image "fixtures/clojure-applied.gif"
+  :height 112
+  :width 85}
+ {:title "Clojure Cookbook"
+  :content "Recipes for Functional Programming"
+  :url "http://shop.oreilly.com/product/0636920029786.do"
+  :image "fixtures/cookbook.gif"
+  :height 112
+  :width 85}
+ {:title "Web Development With Clojure"
+  :content "Build Bullet Proof Web Apps with Less Code"
+  :url "http://shop.oreilly.com/product/9781680500820.do"
+  :image "fixtures/clojure-web-dev.gif"
+  :height 112
+  :width 85}
+ {:title "Clojure Programming"
+  :content "Practical Lisp for the Java World"
+  :url "http://shop.oreilly.com/product/0636920013754.do"
+  :image "fixtures/clojure-programming.gif"
+  :height 112
+  :width 85}]
