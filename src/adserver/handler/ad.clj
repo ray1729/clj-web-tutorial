@@ -102,7 +102,9 @@
       [:tr (map (partial vector :th) ["Id" "Title" "Created" "Updated" "Active?" "Clicks"])]]
      [:tbody
       (map (fn [{:keys [ad-id title created-at updated-at is-active clicks]}]
-             [:tr (map (comp (partial vector :td) h) [ad-id title created-at updated-at is-active clicks])])
+             [:tr
+              [:td (e/link-to (str "/admin/show/" ad-id) ad-id)]
+              (map (comp (partial vector :td) h) [title created-at updated-at is-active clicks])])
            ads)]]]))
 
 (defn handle-list
