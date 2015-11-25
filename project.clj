@@ -1,6 +1,6 @@
 (defproject adserver "0.1.0-SNAPSHOT"
   :description "Demonstration application for web programming tutorial"
-  :url "https://github.com/cam-clj/adserver"
+  :url "https://github.com/ray1729/clj-web-tutorial"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [compojure "1.4.0"]
@@ -12,12 +12,10 @@
                  [ch.qos.logback/logback-core "1.1.3"]
                  [org.slf4j/slf4j-api "1.7.12"]
                  [org.apache.derby/derby "10.12.1.1"]
-                 ;;[com.layerware/hugsql "0.2.2"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
                  [org.flywaydb/flyway-core "3.2.1"]
                  [clj-time "0.11.0"]
                  [commons-codec "1.10"]
-                 ;;[ring-middleware-format "0.7.0" :exclusions [ring cheshire]]
                  [clj-http-status "0.1.0"]
                  [buddy/buddy-hashers "0.8.0"]
                  [buddy/buddy-auth "0.7.1"]

@@ -14,16 +14,6 @@ To run the server:
 
     lein ring server
 
-To follow along with the tutorial, start by:
-
-    git checkout step0
-    
-and to progress to the next step:
-
-    git checkout step1
-    
-etc.
-
 ## License
 
 Copyright © 2015 Ray Miller <ray@1729.org.uk>
