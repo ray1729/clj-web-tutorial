@@ -25,6 +25,10 @@ To run the server:
 
     lein ring server
 
+Once the server is running, navigate to http://localhost:3000/demo.html
+for a demonstration of the embedded ads, or to http://localhost:3000/ to
+login to the admin interface.
+
 ## License
 
 Copyright © 2015 Ray Miller <ray@1729.org.uk>
