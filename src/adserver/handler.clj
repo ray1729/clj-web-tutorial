@@ -84,8 +84,8 @@
 
 (def app
   (-> app-routes
-      (wrap-authentication auth-backend)
       (wrap-authorization auth-backend)
+      (wrap-authentication auth-backend)
       (wrap-defaults site-defaults)
       wrap-config
       wrap-db-connection))

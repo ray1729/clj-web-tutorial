@@ -67,13 +67,14 @@
    [:div
     [:h1 "Authorization Error"]
     [:p "You are not authorized for that action."]
-    [:p (e/link-to "/" "Home")]]))
+    [:p (e/link-to "/logout" "Login as a different user")]]))
 
 ;; This is a Buddy unauthorized-handler, and receives Buddy metadata in
 ;; a second argument that we ignore.
 (defn handle-unauthorized
   [request _]
-  (if (authenticated? request)
+  (log/debug "handle-unauthorized" request)
+  (if (log/spy (authenticated? request))
     (-> (response (render-not-authorized))
         (content-type "text/html")
         (status 403))
